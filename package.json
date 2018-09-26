@@ -1,0 +1,59 @@
+{
+  "name": "betty",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "start:dev": "nodemon src/index.js --exec 'node --require 'dotenv/config' --require babel-register' --ignore '/data/*.json'",
+    "build": "npx babel src -d dist",
+    "serve": "node dist/index.js",
+    "lint": "eslint **/*.js",
+    "test": "NODE_ENV=test istanbul cover --dir ./coverage mocha -- -R spec -t 15000 --recursive --slow 2 --require babel-core/register",
+    "test-build": "NODE_ENV=build istanbul cover --dir ./coverage mocha -- -R spec -t 15000 --recursive --slow 2 --require babel-core/register"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@git.antwerpen.be/astad/shoppingcart_bff_nodejs.git"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-register": "~6.26.0",
+    "eslint": "~4.19.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "flow-bin": "~0.69.0",
+    "istanbul": "~0.4.5",
+    "mocha": "~5.0.5",
+    "nodemon": "~1.17.2",
+    "supertest": "~3.0.0"
+  },
+  "dependencies": {
+    "@slack/client": "^4.6.0",
+    "async": "^2.6.1",
+    "babel-plugin-inline-dotenv": "~1.1.2",
+    "babel-preset-env": "^1.7.0",
+    "body-parser": "~1.18.2",
+    "connect-mongo": "~2.0.1",
+    "dotenv": "~5.0.1",
+    "express": "~4.16.3",
+    "express-session": "^1.15.6",
+    "glob": "^7.1.3",
+    "helmet": "~3.12.0",
+    "install": "~0.12.1",
+    "irail-node": "0.0.2",
+    "isomorphic-fetch": "~2.2.1",
+    "lodash": "^4.17.11",
+    "lodash.get": "~4.4.2",
+    "lodash.merge": "~4.6.1",
+    "mobile-detect": "~1.4.1",
+    "moment": "^2.22.2",
+    "mongoose": "^5.2.17",
+    "npm": "^6.4.1",
+    "oauth": "^0.9.15",
+    "request": "^2.88.0",
+    "uuid": "~3.2.1",
+    "wretch": "~1.4.1"
+  }
+}
