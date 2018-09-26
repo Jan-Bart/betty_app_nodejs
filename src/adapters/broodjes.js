@@ -2,8 +2,18 @@ import moment from 'moment';
 import _ from 'lodash';
 import Betty from '../betty';
 import Broodje from '../models/broodje';
+import schedule from 'node-schedule';
 
 moment.locale('nl');
+
+const j = schedule.scheduleJob('00 11 * * *', function(){
+  const response = {
+    message: 'Heeft iedereen een broodje besteld?',
+    channel: 'C03LXRAGP',
+    attachments: null,
+  };
+  Betty.emit('response', response);
+});
 
 function broodjesReaction(message, event, attachments) {
   const response = {

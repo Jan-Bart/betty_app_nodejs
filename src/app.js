@@ -32,6 +32,7 @@ function initializeDatabase(callback) {
   });
 }
 
+
 function initializeExpress(callback) {
   app = express();
   app.set('port', process.env.PORT);
