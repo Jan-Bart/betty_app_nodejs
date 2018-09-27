@@ -21,7 +21,9 @@ function initializeDatabase(callback) {
   mongoose.Promise = global.Promise;
   let connectionString = 'mongodb://';
   connectionString += (MONGO_PASS && MONGO_USER ? `${MONGO_USER}:${MONGO_PASS}@` : '') + MONGO_CONNECTIONSTRING;
-  mongoose.connect(connectionString);
+  mongoose.connect(connectionString, {
+    useNewUrlParser: true,
+  });
   mongoose.connection.once('open', (err) => {
     if (err) {
       console.log('mongo error', err);

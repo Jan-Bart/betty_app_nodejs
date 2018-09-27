@@ -50,7 +50,9 @@ function initializeDatabase(callback) {
   _mongoose2.default.Promise = global.Promise;
   let connectionString = 'mongodb://';
   connectionString += (MONGO_PASS && MONGO_USER ? `${MONGO_USER}:${MONGO_PASS}@` : '') + MONGO_CONNECTIONSTRING;
-  _mongoose2.default.connect(connectionString);
+  _mongoose2.default.connect(connectionString, {
+    useNewUrlParser: true
+  });
   _mongoose2.default.connection.once('open', err => {
     if (err) {
       console.log('mongo error', err);

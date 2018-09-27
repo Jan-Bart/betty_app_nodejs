@@ -3,6 +3,14 @@ import _ from 'lodash';
 import Betty from '../betty';
 
 moment.locale('nl');
+
+const sorry = [
+  'Het spijt me {user}, ik heb geen idee.',
+  'Hoe moet ik dat nu weten?',
+  'Sorry {user}, ik weet dat niet :(',
+  '*Geeeuw* wat zeg je, {user}?',
+];
+
 const matches = [
   'wat is',
   'waddis',
@@ -81,6 +89,17 @@ export default function handle(event) {
       attachments: null,
     };
     Betty.emit('response', resp);
+  } else {
+    Betty.getSlackUser(event.user).then((user) => {
+      console.log(user);
+      const resp = {
+        message: sorry[Math.floor(Math.random() * sorry.length)].replace('{user}', user.user.profile.first_name),
+        channel: event.channel,
+      };
+      Betty.emit('response', resp);
+    }).catch((err) => {
+      console.log(err);
+    });
   }
   return true;
 }

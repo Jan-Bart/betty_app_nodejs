@@ -1,14 +1,14 @@
 import moment from 'moment';
 import _ from 'lodash';
+import schedule from 'node-schedule';
 import Betty from '../betty';
 import Broodje from '../models/broodje';
-import schedule from 'node-schedule';
 
 moment.locale('nl');
 
-const j = schedule.scheduleJob('00 11 * * *', function(){
+schedule.scheduleJob('00 11 * * *', () => {
   const response = {
-    message: 'Heeft iedereen een broodje besteld?',
+    message: '<!here> Heeft iedereen een broodje besteld?',
     channel: 'C03LXRAGP',
     attachments: null,
   };

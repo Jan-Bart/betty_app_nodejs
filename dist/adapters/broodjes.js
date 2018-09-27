@@ -13,6 +13,10 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _nodeSchedule = require('node-schedule');
+
+var _nodeSchedule2 = _interopRequireDefault(_nodeSchedule);
+
 var _betty = require('../betty');
 
 var _betty2 = _interopRequireDefault(_betty);
@@ -21,17 +25,13 @@ var _broodje = require('../models/broodje');
 
 var _broodje2 = _interopRequireDefault(_broodje);
 
-var _nodeSchedule = require('node-schedule');
-
-var _nodeSchedule2 = _interopRequireDefault(_nodeSchedule);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _moment2.default.locale('nl');
 
-const j = _nodeSchedule2.default.scheduleJob('00 11 * * *', function () {
+_nodeSchedule2.default.scheduleJob('00 11 * * *', () => {
   const response = {
-    message: 'Heeft iedereen een broodje besteld?',
+    message: '<!here> Heeft iedereen een broodje besteld?',
     channel: 'C03LXRAGP',
     attachments: null
   };
