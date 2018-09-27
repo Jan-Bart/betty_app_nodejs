@@ -45,6 +45,7 @@ const descriptions = [
   ['mdm', '*MDM* \n_Mobile device management_'],
   ['os', '*OS* \n_Ondernemen & Stadsmarketing_\n_Operating System_'],
   ['sc', '*SC* \n_Strategische Coördinatie_'],
+  ['solipsisme', '*Solipsisme* \n_Solipsisme is het geloof of de filosofie dat er maar een enkel bewustzijn bestaat: dat van de waarnemer. Het hele universum en alle andere personen waarmee gecommuniceerd wordt bestaan slechts in de geest van de waarnemer._'],
   ['um', '*UM* \n_User Management_\n Bereikbaar op https://um.antwerpen.be'],
   ['ume', '*UME* \n_User Management Engine_'],
   ['wbs', '*WBS* \n_Work-Breakdown Structure_'],
