@@ -1,5 +1,6 @@
 import moment from 'moment';
 import _ from 'lodash';
+import request from 'request';
 import Betty from '../betty';
 
 moment.locale('nl');
@@ -91,16 +92,42 @@ export default function handle(event) {
     };
     Betty.emit('response', resp);
   } else {
-    Betty.getSlackUser(event.user).then((user) => {
-      console.log(user);
-      const resp = {
-        message: sorry[Math.floor(Math.random() * sorry.length)].replace('{user}', user.user.profile.first_name),
-        channel: event.channel,
-      };
-      Betty.emit('response', resp);
-    }).catch((err) => {
-      console.log(err);
+    // try urban dictionary
+    request.get(`http://api.urbandictionary.com/v0/define?term=${match}`, (err, data, body) => {
+      if (err) {
+        Betty.getSlackUser(event.user).then((user) => {
+          const resp = {
+            message: sorry[Math.floor(Math.random() * sorry.length)].replace('{user}', user.user.profile.first_name),
+            channel: event.channel,
+          };
+          Betty.emit('response', resp);
+        });
+      } else {
+        const b = JSON.parse(body);
+        if (b.list.length > 0) {
+          const attachments = {
+            mrkdwn_in: ['text', 'pretext'],
+            text: b.list[0].definition,
+            title: b.list[0].word,
+            title_link: b.list[0].permalink,
+          };
+          const resp = {
+            message: b.list[0].definition,
+            channel: event.channel,
+            attachments,
+          };
+          
+          Betty.emit('response', resp);
+        } else {
+          Betty.getSlackUser(event.user).then((user) => {
+            const resp = {
+              message: sorry[Math.floor(Math.random() * sorry.length)].replace('{user}', user.user.profile.first_name),
+              channel: event.channel,
+            };
+            Betty.emit('response', resp);
+          });
+        }
+      }
     });
   }
-  return true;
 }
