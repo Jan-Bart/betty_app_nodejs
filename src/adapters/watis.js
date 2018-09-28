@@ -112,7 +112,7 @@ export default function handle(event) {
             title_link: b.list[0].permalink,
           };
           const resp = {
-            message: b.list[0].definition,
+            message: '',
             channel: event.channel,
             attachments,
           };
