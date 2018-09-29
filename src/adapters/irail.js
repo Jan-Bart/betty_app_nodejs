@@ -11,7 +11,7 @@ export default function handle(event) {
 
   const destination = event.text.split('trein naar ').pop();
 
-  const url = `https://api.irail.be/connections/?from=Antwerpen-centraal&to=
+  const url = `https://api.irail.be/connections/?from=Antwerpen-zuid&to=
     ${destination}&date=${moment().format('DDMMYY')}&time=${moment().format('HHmm')}
     &timesel=departure&format=json&lang=nl&fast=false&typeOfTransport=trains&alerts=false&results=6`
   request.get(url, (err, data) => {
