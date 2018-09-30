@@ -6,7 +6,7 @@ import Broodje from '../models/broodje';
 
 moment.locale('nl');
 
-schedule.scheduleJob('00 11 * * *', () => {
+schedule.scheduleJob('00 11 * * 1-5', () => {
   const response = {
     message: '<!here> Heeft iedereen een broodje besteld?',
     channel: 'C03LXRAGP',
