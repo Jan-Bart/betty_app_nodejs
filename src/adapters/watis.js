@@ -34,7 +34,7 @@ const descriptions = [
   ['dxp', '*DXP* \n_Digital eXperience Platform_'],
   ['fmo', '*FMO* \n_Facility Management Openbaar domein_'],
   ['gdp', '*GDP* \n_Generiek Dossier Platform_'],
-  ['gfp', '*GFP* \n_Generiek Financiëel Platform\nSAP onderdeel (verkopen)_'],
+  ['gfp', '*GFP* \n_Generiek Financiëel Platform_\n_SAP onderdeel (verkopen)_'],
   ['gmp', '*GMP* \n_Generiek Meldingen Platform_'],
   ['gvp', '*GVP* \n_Generiek Verkoop Platform_'],
   ['iam', '*IAM* \n_Identity & Access Management_'],
