@@ -6,14 +6,22 @@ import Broodje from '../models/broodje';
 
 moment.locale('nl');
 
-schedule.scheduleJob('00 11 * * *', () => {
-  const response = {
-    message: '<!here> Heeft iedereen een broodje besteld?',
-    channel: 'C03LXRAGP',
-    attachments: null,
+async function createBroodjeslijstAttachment() {
+  const data = await Broodje.find({ createdAt: { $gte: moment().startOf('day') } });
+  if (data.length === 0) {
+    return null;
+  }
+  let attachment = '';
+
+  data.forEach((element) => {
+    attachment += `Broodje ${element.broodje} - ${element.user}\n`;
+  });
+  const attachmentData = {
+    mrkdwn_in: ['text', 'pretext'],
+    text: attachment,
   };
-  Betty.emit('response', response);
-});
+  return attachmentData;
+}
 
 function broodjesReaction(message, event, attachments) {
   const response = {
@@ -41,21 +49,13 @@ function broodjesMenu(event) {
 }
 
 async function broodjesLijst(event) {
-  const data = await Broodje.find({ createdAt: { $gte: moment().startOf('day') } });
-  if (data.length === 0) {
+  const lijst = await createBroodjeslijstAttachment();
+  console.log(lijst);
+  if (lijst === null) {
     return broodjesReaction('Er zijn vandaag nog geen broodjes besteld :disappointed:', event, null);
   }
   const message = `Broodjes ${moment().format('dddd DD MMMM')}\n`;
-  let attachment = '';
-
-  data.forEach((element) => {
-    attachment += `Broodje ${element.broodje} - ${element.user}\n`;
-  });
-  const attachmentData = {
-    mrkdwn_in: ['text', 'pretext'],
-    text: attachment,
-  };
-  return broodjesReaction(message, event, attachmentData);
+  return broodjesReaction(message, event, lijst);
 }
 
 async function addBroodje(broodje, user, event) {
@@ -133,3 +133,13 @@ export default function handle(event) {
   }
   return true;
 }
+
+schedule.scheduleJob('00 11 * * *', async () => {
+  const lijst = await createBroodjeslijstAttachment();
+  const response = {
+    message: '<!here> Heeft iedereen een broodje besteld?',
+    channel: 'C03LXRAGP',
+    attachments: lijst,
+  };
+  Betty.emit('response', response);
+});
