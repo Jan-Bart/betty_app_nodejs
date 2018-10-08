@@ -77,6 +77,23 @@ async function addBroodje(broodje, user, event) {
   broodjesReaction(message, event, null);
 }
 
+function help(event) {
+  const message = 'Via Betty kan je een broodje bestellen!\n Bestellen *voor 11u*, de broodjes worden *om 12u gehaald* door een chinese vrijwilliger.\nDe volgende commands zijn beschikbaar:';
+  let attachment = '';
+
+  attachment += '*betty broodje smos kaas hesp*: je bestelt een broodje smos kaas hesp. Je kan dit natuurlijk wijzigen naar jouw eigen voorkeur. Voer dit command nog eens uit om jouw bestelling te wijzigen.\n';
+  attachment += '*betty broodje delete/remove*: Verwijder jouw bestelling.\n';
+  attachment += '*betty broodje menu*: Welke broodjes beschikbaar zijn.\n';
+  attachment += '*betty broodje lijst*: De volledige lijst van bestellingen.\n';
+  attachment += '*betty broodje halen*: Betty bepaalt wie het broodje moet gaan halen.\n';
+  attachment += '*betty broodje help*: Deze boodschap.\n';
+  const attachmentData = {
+    mrkdwn_in: ['text', 'pretext'],
+    text: attachment,
+  };
+
+  broodjesReaction(message, event, attachmentData);
+}
 
 async function deleteBroodje(user, event) {
   const besteldBroodje = await Broodje.findOne({ user, createdAt: { $gte: moment().startOf('day') } });
@@ -105,7 +122,9 @@ export default function handle(event) {
     return false;
   }
 
-  if (sentence[1] === 'halen') {
+  if (sentence.length === 1 || sentence[1] === 'help') {
+    help(event);
+  } else if (sentence[1] === 'halen') {
     broodjeHalen(event);
   } else if (sentence[1] === 'menu') {
     broodjesMenu(event);
