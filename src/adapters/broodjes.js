@@ -134,7 +134,7 @@ export default function handle(event) {
   return true;
 }
 
-schedule.scheduleJob('00 11 * * *', async () => {
+schedule.scheduleJob('00 11 * * 1-5', async () => {
   const lijst = await createBroodjeslijstAttachment();
   const response = {
     message: '<!here> Heeft iedereen een broodje besteld?',

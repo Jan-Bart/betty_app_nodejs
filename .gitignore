@@ -66,3 +66,4 @@ mocha.json
 data/*
 
 .env
+dist/*

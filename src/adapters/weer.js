@@ -9,7 +9,7 @@ export default function handle(event) {
     .toLowerCase()
     .split(' ');
 
-  if (sentence[0] === 'buienradar') {
+  if (sentence[0] === 'buienradar' || sentence[0] === 'weer') {
     const url = 'http://api.buienradar.nl/image/1.0/radarmapbe?width=550';
     const message = `Buienradar om ${moment().format('HH:mm')}u: \n`;
     const attachments = {
