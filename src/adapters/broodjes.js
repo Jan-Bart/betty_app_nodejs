@@ -120,10 +120,11 @@ export default function handle(event) {
   } else if (sentence[1] === 'lijst') {
     broodjesLijst(event);
   } else {
-    sentence.shift();
+    // get full string again for special characters etc
+    const broodjetext = event.text.replace(/^(broodjes )/, '').replace(/^(broodje )/, '');
     try {
       Betty.getSlackUser(event.user).then((user) => {
-        addBroodje(sentence.join(' '), user.user.real_name, event);
+        addBroodje(broodjetext, user.user.real_name, event);
       }).catch((err) => {
         console.log(err);
       });
