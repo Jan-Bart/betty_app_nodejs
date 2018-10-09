@@ -95,6 +95,16 @@ async function broodjeHalen(event) {
 }
 
 
+async function broodjeHalenReset(event) {
+  const chineseUser = await Broodje.findOne({ chinese: true, createdAt: { $gte: moment().startOf('day') } });
+  if (chineseUser) {
+    chineseUser.chinese = false;
+    await chineseUser.save();
+  }
+  broodjesReaction('De chinese vrijwilliger is gereset!', event, null);
+}
+
+
 async function broodjesStats(event) {
   const chineseUser = await Broodje.findOne({ chinese: true, createdAt: { $gte: moment().startOf('day') } });
   if (chineseUser) {
@@ -201,6 +211,8 @@ export default function handle(event) {
 
   if (sentence.length === 1 || sentence[1] === 'help') {
     help(event);
+  } else if (sentence[1] === 'halen' && sentence[2] === 'reset') {
+    broodjeHalenReset(event);
   } else if (sentence[1] === 'halen') {
     broodjeHalen(event);
   } else if (sentence[1] === 'menu') {
