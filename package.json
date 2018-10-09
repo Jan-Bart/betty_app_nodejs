@@ -55,6 +55,7 @@
     "oauth": "^0.9.15",
     "request": "^2.88.0",
     "uuid": "~3.2.1",
+    "weighted-random": "^0.1.0",
     "wretch": "~1.4.1"
   }
 }
