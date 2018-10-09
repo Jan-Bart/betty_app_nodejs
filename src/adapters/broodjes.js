@@ -104,6 +104,23 @@ async function broodjeHalenReset(event) {
   broodjesReaction('De chinese vrijwilliger is gereset!', event, null);
 }
 
+async function broodjeHalenSet(event) {
+  const user = await Betty.getSlackUser(event.user);
+  const newChineseUser = await Broodje.findOne({ userId: user.user.id, createdAt: { $gte: moment().startOf('day') } });
+  if (!newChineseUser) {
+    broodjesReaction('Je moet een broodje besteld hebben om te kunnen gaan halen', event, null);
+  }
+  // als user deelnemer is
+  const chineseUser = await Broodje.findOne({ chinese: true, createdAt: { $gte: moment().startOf('day') } });
+  if (chineseUser) {
+    chineseUser.chinese = false;
+    await chineseUser.save();
+  }
+  newChineseUser.chinese = true;
+  await newChineseUser.save();
+  broodjesReaction(`[UPDATE] ${newChineseUser.userName} haalt vandaag de broodjes!`, event, null);
+}
+
 
 async function broodjesStats(event) {
   const chineseUser = await Broodje.findOne({ chinese: true, createdAt: { $gte: moment().startOf('day') } });
@@ -173,6 +190,8 @@ function help(event) {
   attachment += '*betty broodje menu*: Welke broodjes beschikbaar zijn.\n';
   attachment += '*betty broodje lijst*: De volledige lijst van bestellingen.\n';
   attachment += '*betty broodje halen*: Betty bepaalt wie het broodje moet gaan halen.\n';
+  attachment += '*betty broodje halen ikke*: Geef jezelf op als vrijwilliger om de broodjes te halen.\n';
+  attachment += '*betty broodje halen stats*: Bekijk de kansberekening wie het broodje vandaag haalt.\n';
   attachment += '*betty broodje help*: Deze boodschap.\n';
   const attachmentData = {
     mrkdwn_in: ['text', 'pretext'],
@@ -213,6 +232,8 @@ export default function handle(event) {
     help(event);
   } else if (sentence[1] === 'halen' && sentence[2] === 'reset') {
     broodjeHalenReset(event);
+  } else if (sentence[1] === 'halen' && sentence[2] === 'ikke') {
+    broodjeHalenSet(event);
   } else if (sentence[1] === 'halen') {
     broodjeHalen(event);
   } else if (sentence[1] === 'menu') {

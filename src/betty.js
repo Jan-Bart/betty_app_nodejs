@@ -18,7 +18,7 @@ class Betty extends EventEmitter {
     });
   }
 
-  getSlackUser(userId) {
+  async getSlackUser(userId) {
     return this.slack.users.info({ user: userId });
   }
 
