@@ -15,7 +15,8 @@ async function createBroodjeslijstAttachment() {
   let attachment = '';
 
   data.forEach((element) => {
-    attachment += `Broodje ${element.broodje} - ${element.user}\n`;
+    console.log(element);
+    attachment += `Broodje ${element.broodje} - ${element.userName}\n`;
   });
   const attachmentData = {
     mrkdwn_in: ['text', 'pretext'],
@@ -191,6 +192,7 @@ function help(event) {
   attachment += '*betty broodje lijst*: De volledige lijst van bestellingen.\n';
   attachment += '*betty broodje halen*: Betty bepaalt wie het broodje moet gaan halen.\n';
   attachment += '*betty broodje halen ikke*: Geef jezelf op als vrijwilliger om de broodjes te halen.\n';
+  attachment += '*betty broodje halen reset*: Reset de toewijzing van de chinese vrijwilliger.\n';
   attachment += '*betty broodje halen stats*: Bekijk de kansberekening wie het broodje vandaag haalt.\n';
   attachment += '*betty broodje help*: Deze boodschap.\n';
   const attachmentData = {
