@@ -53,7 +53,7 @@ async function getWeights() {
         return;
       }
       let weight = (1 - (e.chinese / (e.chinese + e.participant)));
-      weight = Math.round((weight ** 4) * 100) / 100;
+      weight = Math.round((weight ** 5) * 100) / 100;
       weights.push({
         weight,
         user: e._id,
