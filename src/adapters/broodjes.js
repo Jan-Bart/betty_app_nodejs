@@ -15,7 +15,6 @@ async function createBroodjeslijstAttachment() {
   let attachment = '';
 
   data.forEach((element) => {
-    console.log(element);
     attachment += `Broodje ${element.broodje} - ${element.userName}\n`;
   });
   const attachmentData = {
@@ -53,7 +52,8 @@ async function getWeights() {
       if (_.find(data, o => o.userId === e._id.id) === undefined) {
         return;
       }
-      const weight = (0.9 - ((e.chinese / (e.chinese + e.participant)) * 0.8));
+      let weight = (1 - (e.chinese / (e.chinese + e.participant)));
+      weight = Math.round((weight ** 4) * 100) / 100;
       weights.push({
         weight,
         user: e._id,
