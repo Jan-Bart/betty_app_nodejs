@@ -40,7 +40,6 @@ const descriptions = [
   ['iam', '*IAM* \n_Identity & Access Management_'],
   ['idc', '*IDC* \n_Uniek id van CRS-O (mapt 1-op-1 met KBO-nummer)_'],
   ['klm', '*KLM* \n_Klanten Management_ :airplane:'],
-  ['love', ':heart: https://www.youtube.com/watch?v=HEXWRTEbj1I'],
   ['lpa', '*LPA* \n_Lokale Politie Antwerpen_ :female-police-officer:'],
   ['lrs', '*LRS* \n_Lokaal Referentie Systeem_'],
   ['mdm', '*MDM* \n_Mobile device management_'],
@@ -80,6 +79,13 @@ export default function handle(event) {
   if (match === false) {
     return false;
   }
+
+  if(Math.floor(Math.random() * 2) === 1) {
+    descriptions.push(['love', ':heart: https://www.youtube.com/watch?v=HEXWRTEbj1I']);
+  } else {
+    descriptions.push(['love', 'A neurochemical con job. :heart:']);
+  }
+
   const found = _.find(descriptions, (el) => {
     return el[0] === match;
   });
