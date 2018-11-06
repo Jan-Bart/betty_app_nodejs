@@ -124,23 +124,18 @@ async function broodjeHalenSet(event) {
 
 
 async function broodjesStats(event) {
-  const chineseUser = await Broodje.findOne({ chinese: true, createdAt: { $gte: moment().startOf('day') } });
-  if (chineseUser) {
-    broodjeHalen(event);
-  } else {
-    const countFrom = new Date((new Date().getTime() - (30 * 24 * 60 * 60 * 1000)));
-    const weights = await getWeights();
-    let attachment = '';
+  const countFrom = new Date((new Date().getTime() - (30 * 24 * 60 * 60 * 1000)));
+  const weights = await getWeights();
+  let attachment = '';
 
-    weights.forEach((element) => {
-      attachment += `${element.user.name} heeft ${Math.round(element.chance)}% kans om te gaan halen (C${element.chinees}/P${element.participant}/W${element.weight})\n`;
-    });
-    const attachmentData = {
-      mrkdwn_in: ['text', 'pretext'],
-      text: attachment,
-    };
-    broodjesReaction(`De kans wordt berekend op deelnames sinds ${moment(countFrom).format('DD/MM/YYYY')}`, event, attachmentData);
-  }
+  weights.forEach((element) => {
+    attachment += `${element.user.name} heeft ${Math.round(element.chance)}% kans om te gaan halen (C${element.chinees}/P${element.participant}/W${element.weight})\n`;
+  });
+  const attachmentData = {
+    mrkdwn_in: ['text', 'pretext'],
+    text: attachment,
+  };
+  broodjesReaction(`De kans wordt berekend op deelnames sinds ${moment(countFrom).format('DD/MM/YYYY')}`, event, attachmentData);
 }
 
 function broodjesMenu(event) {
@@ -193,7 +188,7 @@ function help(event) {
   attachment += '*betty broodje halen*: Betty bepaalt wie het broodje moet gaan halen.\n';
   attachment += '*betty broodje halen ikke*: Geef jezelf op als vrijwilliger om de broodjes te halen.\n';
   attachment += '*betty broodje halen reset*: Reset de toewijzing van de chinese vrijwilliger.\n';
-  attachment += '*betty broodje halen stats*: Bekijk de kansberekening wie het broodje vandaag haalt.\n';
+  attachment += '*betty broodje stats*: Bekijk de kansberekening wie het broodje vandaag haalt.\n';
   attachment += '*betty broodje help*: Deze boodschap.\n';
   const attachmentData = {
     mrkdwn_in: ['text', 'pretext'],
@@ -236,6 +231,8 @@ export default function handle(event) {
     broodjeHalenReset(event);
   } else if (sentence[1] === 'halen' && sentence[2] === 'ikke') {
     broodjeHalenSet(event);
+  } else if (sentence[1] === 'halen' && sentence[2] === 'stats') {
+    broodjesStats(event);
   } else if (sentence[1] === 'halen') {
     broodjeHalen(event);
   } else if (sentence[1] === 'menu') {
