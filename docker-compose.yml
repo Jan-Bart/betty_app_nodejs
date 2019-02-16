@@ -1,16 +1,19 @@
-version: '1'
+version: '3'
 services:
-  app:
+  betty:
     build: .
-    working_dir: /
+    container_name: betty
+    labels:
+      traefik.enable: "true"
+    working_dir: /usr/src/app
     environment:
       NODE_ENV: development
     tty: true
     ports:
-      - "8030:80"
+      - "8484:8484"
     links:
       - mongo
   mongo:
-    image: mongo:3.2
+    image: mongo:4.0
     ports:
       - "27017:27017"
