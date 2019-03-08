@@ -147,7 +147,7 @@ async function broodjesLijst(event) {
   if (lijst === null) {
     return broodjesReaction('Er is vandaag nog niets besteld :disappointed:', event, null);
   }
-  const message = `Bestelling ${moment().format('dddd DD MMMM')}\n`;
+  const message = `Bestelling  ${moment().format('dddd DD MMMM')}\n`;
   return broodjesReaction(message, event, lijst);
 }
 
@@ -185,10 +185,10 @@ function help(event) {
   attachment += '*betty bestel delete/remove*: Verwijder jouw bestelling.\n';
   attachment += '*betty bestel menu*: Welke broodjes beschikbaar zijn.\n';
   attachment += '*betty bestel lijst*: De volledige lijst van bestellingen.\n';
-  attachment += '*betty bestel halen*: Betty bepaalt wie het broodje moet gaan halen.\n';
-  attachment += '*betty bestel halen ikke*: Geef jezelf op als vrijwilliger om de broodjes te halen.\n';
-  attachment += '*betty bestel halen reset*: Reset de toewijzing van de chinese vrijwilliger.\n';
-  attachment += '*betty bestel stats*: Bekijk de kansberekening wie het broodje vandaag haalt.\n';
+  attachment += '*betty bestelling halen*: Betty bepaalt wie het broodje moet gaan halen.\n';
+  attachment += '*betty bestelling halen ikke*: Geef jezelf op als vrijwilliger om de broodjes te halen.\n';
+  attachment += '*betty bestelling halen reset*: Reset de toewijzing van de chinese vrijwilliger.\n';
+  attachment += '*betty bestelling stats*: Bekijk de kansberekening wie het broodje vandaag haalt.\n';
   attachment += '*betty bestel help*: Deze boodschap.\n';
   const attachmentData = {
     mrkdwn_in: ['text', 'pretext'],
@@ -221,7 +221,7 @@ export default function handle(event) {
     .toLowerCase()
     .split(' ');
 
-  if (sentence[0] !== 'bestel') {
+  if (sentence[0] !== 'bestel' && sentence[0] !== 'bestelling') {
     return false;
   }
 
