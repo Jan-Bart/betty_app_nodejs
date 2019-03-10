@@ -42,7 +42,7 @@ function initializeExpress(callback) {
   app.use(bodyParser.json({ limit: '4096kb' }));
 
   app.use((req, res, next) => {
-    logger.info(req.method + ' ' + req.url);
+    console.log(`${req.method} ${req.url}`);
     return next();
   });
 
