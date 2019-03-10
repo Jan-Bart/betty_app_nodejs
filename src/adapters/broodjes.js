@@ -239,6 +239,8 @@ export default function handle(event) {
     broodjesMenu(event);
   } else if (sentence[1] === 'stats') {
     broodjesStats(event);
+  } else if (sentence[1] === 'bestellijst') {
+    broodjesLijst(event);
   } else if (sentence[1] === 'delete' || sentence[1] === 'remove') {
     try {
       Betty.getSlackUser(event.user).then((user) => {
