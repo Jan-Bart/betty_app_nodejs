@@ -221,12 +221,12 @@ export default function handle(event) {
     .toLowerCase()
     .split(' ');
 
-  if (sentence[0] !== 'bestel' && sentence[0] !== 'bestelling') {
-    return false;
-  }
-
   if (sentence[0] === 'bestellijst') {
     broodjesLijst(event);
+  }
+
+  if (sentence[0] !== 'bestel' && sentence[0] !== 'bestelling') {
+    return false;
   }
 
   if (sentence.length === 1 || sentence[1] === 'help') {
