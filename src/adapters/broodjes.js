@@ -257,7 +257,7 @@ export default function handle(event) {
     broodjesLijst(event);
   } else {
     // get full string again for special characters etc
-    const broodjetext = event.text.replace(/^(broodjes )/, '').replace(/^(broodje )/, '');
+    const broodjetext = event.text.replace(/^(bestelling )/, '').replace(/^(bestel )/, '');
     try {
       Betty.getSlackUser(event.user).then((user) => {
         addBroodje(broodjetext, user.user, event);
