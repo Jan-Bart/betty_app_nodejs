@@ -5,6 +5,8 @@ import schedule from 'node-schedule';
 import Betty from '../betty';
 import Broodje from '../models/broodje';
 
+const BROODJES_COMMANDS = ['bestel', 'bestelling', 'broodje'];
+
 moment.locale('nl');
 
 async function createBroodjeslijstAttachment() {
@@ -225,7 +227,7 @@ export default function handle(event) {
     broodjesLijst(event);
   }
 
-  if (sentence[0] !== 'bestel' && sentence[0] !== 'bestelling') {
+  if (!BROODJES_COMMANDS.includes(sentence[0])) {
     return false;
   }
 
