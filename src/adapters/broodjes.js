@@ -5,7 +5,7 @@ import schedule from 'node-schedule';
 import Betty from '../betty';
 import Broodje from '../models/broodje';
 
-const BROODJES_COMMANDS = ['bestel', 'bestelling', 'broodje'];
+const BROODJES_COMMANDS = ['bestel', 'bestelling', 'broodje', 'broodjes'];
 
 moment.locale('nl');
 
