@@ -84,12 +84,7 @@ export default function handle(event) {
   if (match === false) {
     return false;
   }
-  
-  if(Math.floor(Math.random() * 2) === 1) {
-    descriptions.push(['love', ':heart: https://www.youtube.com/watch?v=HEXWRTEbj1I']);
-  } else {
-    descriptions.push(['love', 'A neurochemical con job. :heart:']);
-  }
+
   const commandsentence = event.text.replace(/[.,?!;()"'-]/g, ' ')
     .replace(/\s+/g, ' ')
     .toLowerCase()
