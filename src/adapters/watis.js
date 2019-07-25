@@ -80,19 +80,23 @@ async function addDescription(afkortingkje, description,event){
       attachments: null,
     };
     Betty.emit('response', response);
-  }else{
-    let newthing = new Description({
-      afkorting:afkortingkje,
-      betekening:description
-    });
-    newthing.save();
-    const response = {
+    return true;
+  }
+  const newthing = new Description({
+    afkorting:afkortingkje,
+    betekening:description
+  });
+
+  newthing.save().then( function(data) {
+    sconst response = {
       message: 'Afkorting toegevoegd aan de database :)',
       channel: event.channel,
       attachments: null,
     };
     Betty.emit('response', response);
-  }
+  });;
+    
+  
 }
 
 async function getDescription(afkortinga) {
@@ -158,7 +162,8 @@ export default function handle(event) {
               };
               Betty.emit('response', resp);
             });
-          } else {
+            return true;
+          }
             const b = JSON.parse(body);
             if (b.list.length > 0) {
               const attachments = {
@@ -183,7 +188,7 @@ export default function handle(event) {
                 Betty.emit('response', resp);
               });
             }
-          }//ignore <----> urban dictionary
+        //ignore <----> urban dictionary
         });
       }
       else{
