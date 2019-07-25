@@ -155,7 +155,7 @@ export default function handle(event) {
         });
       } else {
         const response = {
-          message: `Afkorting: ${data[0].afkorting} - Betekenis: ${data[0].betekenis}`,
+          message: `*${data[0].afkorting}* \n${data[0].betekenis}`,
           channel: event.channel,
           attachments: null,
         };
