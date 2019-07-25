@@ -13,7 +13,7 @@ export default function handle(event) {
 
   const url = `https://api.irail.be/connections/?from=Antwerpen-zuid&to=
     ${destination}&date=${moment().format('DDMMYY')}&time=${moment().format('HHmm')}
-    &timesel=departure&format=json&lang=nl&fast=false&typeOfTransport=trains&alerts=false&results=6`
+    &timesel=departure&format=json&lang=nl&fast=false&typeOfTransport=trains&alerts=false&results=6`;
   request.get(url, (err, data) => {
     if (err) {
       return;

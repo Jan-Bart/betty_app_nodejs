@@ -22,40 +22,6 @@ const matches = [
   'waddis',
 ];
 
-const descriptions = [
-  ['acpaas', '*ACPaaS* \n_Antwerp City Platform as a Service_'],
-  ['alm', '*ALM* \n_Application lifecycle management_'],
-  ['bff', '*BFF* \n_Backend For Frontend_'],
-  ['amap', '*AMAP* \n_Algemene meldingen app_'],
-  ['braas', '*BRaaS* \n_Business Roles as a Service_'],
-  ['bza', '*BZA* \n_Brandweer Zone Antwerpen_'],
-  ['crs', '*CRS* \n_Centraal Referentie Systeem_'],
-  ['daas', '*DAAS* \n_Digipolis Antwerp Application Stack_'],
-  ['dl', '*DL* \n_District & Loketwerking_'],
-  ['dxp', '*DXP* \n_Digital eXperience Platform_'],
-  ['et', '*ET* \n_Evenementen tool_'],
-  ['fmo', '*FMO* \n_Facility Management Openbaar domein_'],
-  ['gdp', '*GDP* \n_Generiek Dossier Platform_'],
-  ['gfp', '*GFP* \n_Generiek Financiëel Platform_\n_SAP onderdeel (verkopen)_'],
-  ['gmp', '*GMP* \n_Generiek Meldingen Platform_'],
-  ['gvp', '*GVP* \n_Generiek Verkoop Platform_'],
-  ['iam', '*IAM* \n_Identity & Access Management_'],
-  ['iod', '*IOD* \n_Inname openbaar domein_'],
-  ['idc', '*IDC* \n_Uniek id van CRS-O (mapt 1-op-1 met KBO-nummer)_'],
-  ['klm', '*KLM* \n_Klanten Management_ :airplane:'],
-  ['lpa', '*LPA* \n_Lokale Politie Antwerpen_ :female-police-officer:'],
-  ['lrs', '*LRS* \n_Lokaal Referentie Systeem_'],
-  ['mdm', '*MDM* \n_Mobile device management_'],
-  ['os', '*OS* \n_Ondernemen & Stadsmarketing_\n_Operating System_'],
-  ['ovmr', '*OVMR* \n_Ondernemen Volgens Minder Regels_'],
-  ['sc', '*SC* \n_Strategische Coördinatie_'],
-  ['solipsisme', '*Solipsisme* \n_Solipsisme is het geloof of de filosofie dat er maar een enkel bewustzijn bestaat: dat van de waarnemer. Het hele universum en alle andere personen waarmee gecommuniceerd wordt bestaan slechts in de geest van de waarnemer._'],
-  ['um', '*UM* \n_User Management_\n Bereikbaar op https://um.antwerpen.be'],
-  ['ume', '*UME* \n_User Management Engine_'],
-  ['wbs', '*WBS* \n_Work-Breakdown Structure_'],
-  ['wcm', '*WCM* \n_Web Content Management (system)_\n Meer info bij het ALM-team.'],
-];
-
 function findMatch(string) {
   let found = false;
   let parsed = false;
@@ -71,7 +37,7 @@ function findMatch(string) {
   return parsed.replace(/\s+/g, ' ').trim();
 }
 async function addDescription(afkortingkje, description,event){
-  let descriptie = await Description.findOne({ afkorting:afkortingkje, betekening:description});
+  let descriptie = await Description.findOne({ afkorting:afkortingkje, betekenis:description});
 
   if(descriptie){
     const response = {
@@ -84,7 +50,7 @@ async function addDescription(afkortingkje, description,event){
   }
   const newthing = new Description({
     afkorting:afkortingkje,
-    betekening:description
+    betekenis:description
   });
 
   newthing.save().then( function(data) {
@@ -95,8 +61,6 @@ async function addDescription(afkortingkje, description,event){
     };
     Betty.emit('response', response);
   });;
-    
-  
 }
 
 async function getDescription(afkortinga) {
@@ -142,13 +106,11 @@ export default function handle(event) {
 
     let afkorting = command.split(' ')[1];
     let betekenis = command.substring(command.indexOf(afkorting) + afkorting.length+1);
-    console.log("Afkorting: " + afkorting + " betekenis: " + betekenis.replace(' ', ''));
 
     addDescription(afkorting, betekenis, event);
   }
   else{
     command = command.split(' ')[0];
-    console.log(command);
     let descriptie = getDescription(command)
 
     descriptie.then(function(data) {
@@ -192,9 +154,8 @@ export default function handle(event) {
         });
       }
       else{
-        //console.log(data[0].betekening) // "Some User token"
         const response = {
-          message: 'Afkorting: ' + data[0].afkorting + ' - Betekenis: ' + data[0].betekening,
+          message: 'Afkorting: ' + data[0].afkorting + ' - Betekenis: ' + data[0].betekenis,
           channel: event.channel,
           attachments: null,
         };
@@ -202,21 +163,4 @@ export default function handle(event) {
       }
     })
   }
-
-
-  /*const found = _.find(descriptions, (el) => {
-    return el[0] === match;
-  });
-
-  if (found !== undefined) {
-    const resp = {                                                        //TODO: replace with mongodb get
-      message: found[1],
-      channel: event.channel,
-      attachments: null,
-    };
-    Betty.emit('response', resp);
-  } else {
-    // try urban dictionary
-    
-  }*/
 }

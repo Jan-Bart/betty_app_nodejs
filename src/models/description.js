@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const descriptionSchema = new mongoose.Schema({
   afkorting: String,
-  betekening: String,
+  betekenis: String,
 });
 
 
