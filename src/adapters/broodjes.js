@@ -154,7 +154,6 @@ async function broodjesLijst(event) {
 }
 
 async function addBroodje(broodje, user, event) {
-  user = {id:123,real_name:"besteld broodje"};
   let besteldBroodje = await Broodje.findOne({ userId: user.id, createdAt: { $gte: moment().startOf('day') } });
 
   let message = 'Geen idee wat ik moet doen nu ¯\\_(ツ)_/¯';

@@ -18,7 +18,6 @@ let app;
 
 
 function initializeDatabase(callback) {
-  console.log("In de functie");
   mongoose.Promise = global.Promise;
   let connectionString = 'mongodb://';
   connectionString += (MONGO_PASS && MONGO_USER ? `${MONGO_USER}:${MONGO_PASS}@` : '') + MONGO_CONNECTIONSTRING;
@@ -26,7 +25,6 @@ function initializeDatabase(callback) {
     useNewUrlParser: true,
   });
   mongoose.connection.once('open', (err) => {
-    console.log("Mongo Verbonden");
     if (err) {
       console.log('mongo error', err);
       return callback(err);
