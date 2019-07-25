@@ -1,8 +1,7 @@
 import moment from 'moment';
-import _ from 'lodash';
 import request from 'request';
 import Betty from '../betty';
-import Description from '../models/description.js'
+import Description from '../models/description';
 
 moment.locale('nl');
 
@@ -36,10 +35,13 @@ function findMatch(string) {
   }
   return parsed.replace(/\s+/g, ' ').trim();
 }
-async function addDescription(afkortingkje, description,event){
-  let descriptie = await Description.findOne({ afkorting:afkortingkje, betekenis:description});
+async function addDescription(afkortingkje, description, event) {
+  const descriptie = await Description.findOne({
+    afkorting: afkortingkje,
+    betekenis: description,
+  });
 
-  if(descriptie){
+  if (descriptie) {
     const response = {
       message: 'Die descriptie betaat al',
       channel: event.channel,
@@ -50,11 +52,11 @@ async function addDescription(afkortingkje, description,event){
   }
 
   const newthing = new Description({
-    afkorting:afkortingkje,
-    betekenis:description
+    afkorting: afkortingkje,
+    betekenis: description,
   });
 
-  newthing.save().then( function(data) {
+  newthing.save().then(() => {
     const response = {
       message: 'Afkorting toegevoegd aan de database :)',
       channel: event.channel,
@@ -62,17 +64,19 @@ async function addDescription(afkortingkje, description,event){
     };
     Betty.emit('response', response);
   });
+  return true;
 }
 
 async function getDescription(afkortinga) {
-  const data = await Description.find({ afkorting:afkortinga });
+  const data = await Description.find({
+    afkorting: afkortinga,
+  });
   if (data.length === 0) {
     return null;
   }
   return data;
 }
 export default function handle(event) {
-
   if (!event.text) {
     return false;
   }
@@ -90,28 +94,30 @@ export default function handle(event) {
     .toLowerCase()
     .split(' ');
   let command = commandsentence[1];
-  if(command == undefined){
+  if (command === undefined) {
     return false;
   }
-  if(command == "is" || command == "s" || command == "es"){
+  if (command === 'is' || command === 's' || command === 'es') {
     command = commandsentence[2];
   }
-  event.text = event.text.replace(commandsentence[0], '');
-  if(command == "add"){
-    command = event.text.substring(event.text.indexOf('add ') + 3)
 
-    let afkorting = command.split(' ')[1];
-    let betekenis = command.substring(command.indexOf(afkorting) + afkorting.length+1);
+  let eventtext = event.text;
+  eventtext = event.text.replace(commandsentence[0], '');
+  if (command === 'add') {
+    command = eventtext.substring(eventtext.indexOf('add ') + 3);
+
+    const afkorting = command.split(' ')[1];
+    const betekenis = command.substring(command.indexOf(afkorting) + afkorting.length + 1);
 
     addDescription(afkorting, betekenis, event);
-  }
-  else{
-    command = command.split(' ')[0];
-    let descriptie = getDescription(command)
+  } else {
+    const [y] = command.split(' ');
+    command = y;
+    const descriptie = getDescription(command);
 
-    descriptie.then(function(data) {
-      if(data == null){
-          request.get(`http://api.urbandictionary.com/v0/define?term=${match}`, (err, data, body) => {
+    descriptie.then((data) => {
+      if (data == null) {
+        request.get(`http://api.urbandictionary.com/v0/define?term=${match}`, (err, datareq, body) => {
           if (err) {
             Betty.getSlackUser(event.user).then((user) => {
               const resp = {
@@ -122,41 +128,39 @@ export default function handle(event) {
             });
             return true;
           }
-            const b = JSON.parse(body);
-            if (b.list.length > 0) {
-              const attachments = {
-                mrkdwn_in: ['text', 'pretext'],
-                text: b.list[0].definition,
-                title: b.list[0].word,
-                title_link: b.list[0].permalink,
-              };
+          const b = JSON.parse(body);
+          if (b.list.length > 0) {
+            const attachments = {
+              mrkdwn_in: ['text', 'pretext'],
+              text: b.list[0].definition,
+              title: b.list[0].word,
+              title_link: b.list[0].permalink,
+            };
+            const resp = {
+              message: '',
+              channel: event.channel,
+              attachments,
+            };
+
+            Betty.emit('response', resp);
+          } else {
+            Betty.getSlackUser(event.user).then((user) => {
               const resp = {
-                message: '',
+                message: sorry[Math.floor(Math.random() * sorry.length)].replace('{user}', user.user.profile.first_name),
                 channel: event.channel,
-                attachments,
               };
-              
               Betty.emit('response', resp);
-            } else {
-              Betty.getSlackUser(event.user).then((user) => {
-                const resp = {
-                  message: sorry[Math.floor(Math.random() * sorry.length)].replace('{user}', user.user.profile.first_name),
-                  channel: event.channel,
-                };
-                Betty.emit('response', resp);
-              });
-            }
-        //ignore <----> urban dictionary
+            });
+          }
         });
-      }
-      else{
+      } else {
         const response = {
-          message: 'Afkorting: ' + data[0].afkorting + ' - Betekenis: ' + data[0].betekenis,
+          message: `Afkorting: ${data[0].afkorting} - Betekenis: ${data[0].betekenis}`,
           channel: event.channel,
           attachments: null,
         };
         Betty.emit('response', response);
       }
-    })
+    });
   }
 }
