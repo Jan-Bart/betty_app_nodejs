@@ -48,19 +48,20 @@ async function addDescription(afkortingkje, description,event){
     Betty.emit('response', response);
     return true;
   }
+
   const newthing = new Description({
     afkorting:afkortingkje,
     betekenis:description
   });
 
   newthing.save().then( function(data) {
-    sconst response = {
+    const response = {
       message: 'Afkorting toegevoegd aan de database :)',
       channel: event.channel,
       attachments: null,
     };
     Betty.emit('response', response);
-  });;
+  });
 }
 
 async function getDescription(afkortinga) {
