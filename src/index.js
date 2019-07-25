@@ -4,5 +4,5 @@ app.start((err) => {
   if (err) {
     console.error(`Error=${err}`);
   }
-  console.info('app bootstrap finished');
+  console.info('ETapp bootstrap finished');
 });
