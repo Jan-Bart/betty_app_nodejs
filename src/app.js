@@ -76,6 +76,7 @@ function initializeBetty(callback) {
 
 function start(cb) {
   // give some time for pre-initialization
+
   async.series([
     initializeDatabase,
     initializeExpress,
