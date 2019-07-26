@@ -85,7 +85,7 @@ async function deleteDescription(afkortingkje, event) {
   });
   todelete.remove().then(() => {
     const response = {
-      message: 'Afkorting verwijdert :)',
+      message: 'Afkorting verwijderd :)',
       channel: event.channel,
       attachments: null,
     };
