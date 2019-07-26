@@ -38,7 +38,6 @@ function findMatch(string) {
 async function addDescription(afkortingkje, description, event) {
   const descriptie = await Description.findOne({
     afkorting: afkortingkje,
-    betekenis: description,
   });
 
   if (descriptie) {
@@ -80,8 +79,10 @@ async function getDescription(afkortinga) {
   return data;
 }
 
-async function deleteDescription(afkorting, event) {
-  const todelete = getDescription(afkorting);
+async function deleteDescription(afkortingkje, event) {
+  const todelete = await Description.findOne({
+    afkorting: afkortingkje,
+  });
   todelete.remove().then(() => {
     const response = {
       message: 'Afkorting verwijdert :)',
