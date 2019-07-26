@@ -42,12 +42,14 @@ async function addDescription(afkortingkje, description, event) {
   });
 
   if (descriptie) {
-    const response = {
-      message: 'Die descriptie betaat al',
-      channel: event.channel,
-      attachments: null,
-    };
-    Betty.emit('response', response);
+    descriptie.update({ betekenis: description }).then(() => {
+      const response = {
+        message: 'Afkorting gewijzigd in de database :)',
+        channel: event.channel,
+        attachments: null,
+      };
+      Betty.emit('response', response);
+    });
     return true;
   }
 
@@ -67,6 +69,7 @@ async function addDescription(afkortingkje, description, event) {
   return true;
 }
 
+
 async function getDescription(afkortinga) {
   const data = await Description.find({
     afkorting: afkortinga,
@@ -75,6 +78,20 @@ async function getDescription(afkortinga) {
     return null;
   }
   return data;
+}
+
+async function deleteDescription(afkorting, event) {
+  const todelete = getDescription(afkorting);
+  todelete.remove().then(() => {
+    const response = {
+      message: 'Afkorting verwijdert :)',
+      channel: event.channel,
+      attachments: null,
+    };
+    Betty.emit('response', response);
+  });
+
+  return true;
 }
 export default function handle(event) {
   if (!event.text) {
@@ -100,17 +117,18 @@ export default function handle(event) {
   if (command === 'is' || command === 's' || command === 'es') {
     command = commandsentence[2];
   }
-
-  let eventtext = event.text;
+  let eventtext = event.text; 
   eventtext = event.text.replace(commandsentence[0], '');
-  if (command === 'add') {
+  if (command === 'add') {// Add afkorting in database
     command = eventtext.substring(eventtext.indexOf('add ') + 3);
-
     const afkorting = command.split(' ')[1];
     const betekenis = command.substring(command.indexOf(afkorting) + afkorting.length + 1);
-
     addDescription(afkorting, betekenis, event);
-  } else {
+  } else if (command === 'delete') { // Delete afkorting
+    command = eventtext.substring(eventtext.indexOf('delete ') + 6);
+    const afkorting = command.split(' ')[1];
+    deleteDescription(afkorting, event);
+  } else { // Find in urbandictionary
     const [y] = command.split(' ');
     command = y;
     const descriptie = getDescription(command);
