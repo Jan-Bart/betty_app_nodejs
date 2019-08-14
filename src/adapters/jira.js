@@ -5,10 +5,10 @@ import Betty from '../betty';
 
 moment.locale('nl');
 const jira = new JiraClient({
-  host: 'jira.antwerpen.be',
+  host: process.env.JIRA_HOST,
   basic_auth: {
-    username: 'Ranorex',
-    password: 'koningnigeria',
+    username: process.env.JIRA_USERNAME,
+    password: process.env.JIRA_PASSWORD,
   },
 });
 const s = new SearchClient(jira);
