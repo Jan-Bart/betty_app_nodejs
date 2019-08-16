@@ -2,6 +2,7 @@ import moment from 'moment';
 import JiraClient from 'jira-connector';
 import SearchClient from 'jira-connector/api/search';
 import Betty from '../betty';
+import normalizeAndTokenizeText from '../helpers/normalizeAndTokenize';
 
 moment.locale('nl');
 const jira = new JiraClient({
@@ -14,10 +15,7 @@ const jira = new JiraClient({
 const s = new SearchClient(jira);
 
 export default function handle(event) {
-  const sentence = event.text.replace(/[.,?!;()"'-]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .toLowerCase()
-    .split(' ');
+  const sentence = normalizeAndTokenizeText(event.text);
   if (sentence[0] === 'toon') {
     const tosearch = event.text.replace('toon ', '');
     s.search({
