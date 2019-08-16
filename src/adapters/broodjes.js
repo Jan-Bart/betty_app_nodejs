@@ -260,23 +260,18 @@ export default function handle(event) {
 
   let commandHandler = COMMAND_HANDLERS[command];
   if(command === 'halen') {
-    COMMAND_HANDLERS.halen[subcommand];
-  }
-
-  if(commandHandler) {
-    try {
-      return commandHandler(event);
-    } catch(err) {
-      console.log(err);
-    }
+    commandHandler = COMMAND_HANDLERS.halen[subcommand];
   }
 
   try {
+    if(commandHandler) {
+      return commandHandler(event);
+    }
+
     return addBroodje(event);
   } catch(err) {
     console.log(err);
   }
-
   return true;
 }
 
