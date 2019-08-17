@@ -224,12 +224,7 @@ const COMMAND_HANDLERS = {
     ikke: broodjesHalenSet,
     stats: broodjesStats,
   }, {
-    get: (obj, prop) => {
-      const value = obj[prop];
-      if(!value) {
-        return broodjeHalen
-      }
-    }
+    get: (obj, prop) =>  obj[prop] || broodjesHalen
   }),
   menu: broodjesMenu,
   stats: broodjesStats,
