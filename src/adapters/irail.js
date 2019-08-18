@@ -5,11 +5,12 @@ import Betty from '../betty';
 moment.locale('nl');
 
 export default function handle(event) {
-  if (event.text.indexOf('trein naar') === -1) {
+  const text = event.text.toLowerCase();
+  if (text.indexOf('trein naar') === -1) {
     return false;
   }
 
-  const destination = event.text.split('trein naar ').pop();
+  const destination = text.split('trein naar ').pop();
 
   const url = `https://api.irail.be/connections/?from=Antwerpen-zuid&to=
     ${destination}&date=${moment().format('DDMMYY')}&time=${moment().format('HHmm')}

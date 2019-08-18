@@ -1,14 +1,12 @@
 import moment from 'moment';
 import request from 'request';
 import Betty from '../betty';
+import normalizeAndTokenizeText from '../helpers/normalizeAndTokenize';
 
 moment.locale('nl');
 
 export default function handle(event) {
-  const sentence = event.text.replace(/[.,?!;()"'-]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .toLowerCase()
-    .split(' ');
+  const sentence = normalizeAndTokenizeText(event.text);
 
   if (sentence[0] !== 'status') {
     return false;

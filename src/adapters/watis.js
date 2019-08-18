@@ -2,6 +2,7 @@ import moment from 'moment';
 import request from 'request';
 import Betty from '../betty';
 import Description from '../models/description';
+import normalizeAndTokenizeText from '../helpers/normalizeAndTokenize';
 
 moment.locale('nl');
 
@@ -107,10 +108,7 @@ export default function handle(event) {
     return false;
   }
 
-  const commandsentence = event.text.replace(/[.,?!;()"'-]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .toLowerCase()
-    .split(' ');
+  const commandsentence = normalizeAndTokenizeText(event.text);
   let command = commandsentence[1];
   if (command === undefined) {
     return false;

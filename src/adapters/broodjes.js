@@ -4,7 +4,7 @@ import weightedRandom from 'weighted-random';
 import schedule from 'node-schedule';
 import Betty from '../betty';
 import Broodje from '../models/broodje';
-
+import normalizeAndTokenizeText from '../helpers/normalizeAndTokenize';
 const BROODJES_COMMANDS = ['bestel', 'bestelling', 'broodje', 'broodjes'];
 
 moment.locale('nl');
@@ -153,7 +153,9 @@ async function broodjesLijst(event) {
   return broodjesReaction(message, event, lijst);
 }
 
-async function addBroodje(broodje, user, event) {
+async function addBroodje(event) {
+  const { user } = await Betty.getSlackUser(event.user);
+  const broodje = event.text.replace(/^(bestelling )/, '').replace(/^(bestel )/, '');
   let besteldBroodje = await Broodje.findOne({ userId: user.id, createdAt: { $gte: moment().startOf('day') } });
 
   let message = 'Geen idee wat ik moet doen nu ¯\\_(ツ)_/¯';
@@ -200,7 +202,9 @@ function help(event) {
   broodjesReaction(message, event, attachmentData);
 }
 
-async function deleteBroodje(user, event) {
+async function deleteBroodje(event) {
+
+  const { user } = await Betty.getSlackUser(event.user);
   const besteldBroodje = await Broodje.findOne({ userId: user.id, createdAt: { $gte: moment().startOf('day') } });
 
   let message = 'Geen idee wat ik moet doen nu ¯\\_(ツ)_/¯';
@@ -214,59 +218,54 @@ async function deleteBroodje(user, event) {
   broodjesReaction(message, event, null);
 }
 
+const COMMAND_HANDLERS = {
+  halen: newProxy({
+    reset: broodjeHalenReset,
+    ikke: broodjesHalenSet,
+    stats: broodjesStats,
+  }, {
+    get: (obj, prop) =>  obj[prop] || broodjesHalen
+  }),
+  menu: broodjesMenu,
+  stats: broodjesStats,
+  lijst: broodjesLijst,
+  help: help,
+  delete: deleteBroodje,
+  remove: deleteBroodje
+}
+
+
 export default function handle(event) {
   if (!event.text) {
     return false;
   }
-  const sentence = event.text.replace(/[.,?!;()"'-]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .toLowerCase()
-    .split(' ');
-
-  if (sentence[0] === 'bestellijst') {
-    broodjesLijst(event);
+  const sentence = normalizeAndTokenizeText(event.text);
+  const [broodjesCommand, command, subcommand] = sentence;
+   if (broodjesCommand === 'bestellijst') {
+    return broodjesLijst(event);
   }
 
   if (!BROODJES_COMMANDS.includes(sentence[0])) {
     return false;
   }
 
-  if (sentence.length === 1 || sentence[1] === 'help') {
-    help(event);
-  } else if (sentence[1] === 'halen' && sentence[2] === 'reset') {
-    broodjeHalenReset(event);
-  } else if (sentence[1] === 'halen' && sentence[2] === 'ikke') {
-    broodjeHalenSet(event);
-  } else if (sentence[1] === 'halen' && sentence[2] === 'stats') {
-    broodjesStats(event);
-  } else if (sentence[1] === 'halen') {
-    broodjeHalen(event);
-  } else if (sentence[1] === 'menu') {
-    broodjesMenu(event);
-  } else if (sentence[1] === 'stats') {
-    broodjesStats(event);
-  } else if (sentence[1] === 'delete' || sentence[1] === 'remove') {
-    try {
-      Betty.getSlackUser(event.user).then((user) => {
-        deleteBroodje(user.user, event);
-      }).catch(err => console.log(err));
-    } catch (err) {
-      console.log(err);
+  if (sentence.length === 1) {
+    return help(event);
+  } 
+
+  let commandHandler = COMMAND_HANDLERS[command];
+  if(command === 'halen') {
+    commandHandler = COMMAND_HANDLERS.halen[subcommand];
+  }
+
+  try {
+    if(commandHandler) {
+      return commandHandler(event);
     }
-  } else if (sentence[1] === 'lijst') {
-    broodjesLijst(event);
-  } else {
-    // get full string again for special characters etc
-    const broodjetext = event.text.replace(/^(bestelling )/, '').replace(/^(bestel )/, '');
-    try {
-      Betty.getSlackUser(event.user).then((user) => {
-        addBroodje(broodjetext, user.user, event);
-      }).catch((err) => {
-        console.log(err);
-      });
-    } catch (err) {
-      console.log(err);
-    }
+
+    return addBroodje(event);
+  } catch(err) {
+    console.log(err);
   }
   return true;
 }
