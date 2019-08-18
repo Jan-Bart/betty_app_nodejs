@@ -107,7 +107,7 @@ async function broodjeHalenReset(event) {
   broodjesReaction('De chinese vrijwilliger is gereset!', event, null);
 }
 
-async function broodjeHalenSet(event) {
+async function broodjesHalenSet(event) {
   const user = await Betty.getSlackUser(event.user);
   const newChineseUser = await Broodje.findOne({ userId: user.user.id, createdAt: { $gte: moment().startOf('day') } });
   if (!newChineseUser) {
