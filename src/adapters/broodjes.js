@@ -219,7 +219,7 @@ async function deleteBroodje(event) {
 }
 
 const COMMAND_HANDLERS = {
-  halen: newProxy({
+  halen: new Proxy({
     reset: broodjeHalenReset,
     ikke: broodjesHalenSet,
     stats: broodjesStats,
