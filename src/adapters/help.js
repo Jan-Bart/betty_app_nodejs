@@ -40,13 +40,14 @@ const weer = [
   '*betty weer*: geeft een .gif van het weer.',
 ];
 
-const modulemap = new Map();
-modulemap.set('broodjes', broodjes);
-modulemap.set('irail', irail);
-modulemap.set('status', status);
-modulemap.set('watis', watis);
-modulemap.set('jira', jira);
-modulemap.set('weer', weer);
+const modulemap = {
+    broodjes,
+    irail,
+    status,
+    watis,
+    jira,
+    weer,
+};
 
 export default function handle(event) {
   const sentence = normalizeAndTokenizeText(event.text);
@@ -87,7 +88,7 @@ export default function handle(event) {
   }
   const message = `betty help *${module}*`;
   let attachment = '';
-  modulemap.get(module).forEach((info) => {
+  modulemap[module].forEach((info) => {
     attachment += `${info}\n`;
   });
 
