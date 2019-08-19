@@ -64,7 +64,7 @@ export default function handle(event) {
     const response = {
       message,
       channel: event.channel,
-      attachmentData,
+      attachments: attachmentData,
     };
     Betty.emit('response', response);
     return true;
@@ -99,7 +99,7 @@ export default function handle(event) {
   const response = {
     message,
     channel: event.channel,
-    attachmentData,
+    attachments: attachmentData,
   };
   Betty.emit('response', response);
 
