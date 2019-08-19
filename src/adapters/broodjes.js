@@ -74,7 +74,7 @@ async function getWeights() {
   }
 }
 
-async function broodjeHalen(event) {
+async function broodjesHalen(event) {
   // first check if no chinese has been assigned today
   let chineseUser = await Broodje.findOne({ chinese: true, createdAt: { $gte: moment().startOf('day') } });
   if (chineseUser) {
