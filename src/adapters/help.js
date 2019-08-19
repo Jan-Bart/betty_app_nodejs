@@ -51,6 +51,7 @@ const modulemap = {
 
 export default function handle(event) {
   const sentence = normalizeAndTokenizeText(event.text);
+  if(sentence[0] !== 'help')return false;
   if (isNullOrUndefined(sentence[1]) || sentence[1] === '') {
     const message = 'Help modules';
     let attachment = '';
