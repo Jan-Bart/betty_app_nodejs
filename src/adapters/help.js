@@ -51,8 +51,9 @@ const modulemap = {
 
 export default function handle(event) {
   const sentence = normalizeAndTokenizeText(event.text);
+  if(sentence[0] !== 'help')return false;
   if (isNullOrUndefined(sentence[1]) || sentence[1] === '') {
-    const message = 'Betty hulp modules';
+    const message = 'Help modules';
     let attachment = '';
     modules.forEach((module) => {
       attachment += `betty help ${module}\n`;
@@ -77,6 +78,7 @@ export default function handle(event) {
       found = true;
     }
   });
+
   if (found !== true) {
     const response = {
       message: 'Module niet gevonden',
