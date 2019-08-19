@@ -9,18 +9,19 @@ export default function handle(event) {
   if (text.indexOf('trein naar') === -1) {
     return false;
   }
-
+  
   const destination = text.split('trein naar ').pop();
-
+  
   const url = `https://api.irail.be/connections/?from=Antwerpen-zuid&to=
-    ${destination}&date=${moment().format('DDMMYY')}&time=${moment().format('HHmm')}
-    &timesel=departure&format=json&lang=nl&fast=false&typeOfTransport=trains&alerts=false&results=6`;
+  ${destination}&date=${moment().format('DDMMYY')}&time=${moment().format('HHmm')}
+  &timesel=departure&format=json&lang=nl&fast=false&typeOfTransport=trains&alerts=false&results=6`;
   request.get(url, (err, data) => {
     if (err) {
       return;
     }
     const connections = [];
     const info = JSON.parse(data.body);
+    if (info === undefined) return false;
     info.connection.forEach((conn) => {
       connections.push({
         departure: {
@@ -35,7 +36,8 @@ export default function handle(event) {
     });
     const message = `De volgende treinen vertrekken naar ${destination}\n`;
     let attachment = '';
-
+    
+    if (connections === undefined) return false;
     connections.forEach((element) => {
       attachment += `• Om ${element.departure.time}u in ${element.departure.station}, aankomst om ${element.arrival.time}u in ${element.arrival.station}\n`;
     });
