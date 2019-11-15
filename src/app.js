@@ -67,8 +67,17 @@ function startListening(callback) {
 function initializeBetty(callback) {
   glob.sync('adapters/*.js', { cwd: __dirname }).forEach((adapter) => {
     // eslint-disable-next-line
-    const toImport = require(`${__dirname}/${adapter}`); 
-    Betty.on('event', toImport.default);
+    const toImport = require(`${__dirname}/${adapter}`);
+
+    if (toImport.initialize) {
+      return toImport.initialize({ betty: Betty });
+    }
+
+    Betty.on('event', (event) => {
+      if (toImport.default) {
+        toImport.default(event);
+      }
+    });
   });
   return callback();
 }

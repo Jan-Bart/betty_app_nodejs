@@ -12,6 +12,7 @@ const modules = [
   '*watis*: module ivm afkortingen en het zoeken van woorden',
   '*jira*: module ivm het zoeken van jira tickets',
   '*weer*: module ivm informatie over het weer',
+  '*poll*: module om polls te maken',
 ];
 const broodjes = [
   '*betty bestel smos kaas hesp*: je bestelt een broodje smos kaas hesp. Je kan dit natuurlijk wijzigen naar jouw eigen voorkeur. Voer dit command nog eens uit om jouw bestelling te wijzigen.',
@@ -39,14 +40,18 @@ const jira = [
 const weer = [
   '*betty weer*: geeft een .gif van het weer.',
 ];
+const poll = [
+  '*betty poll "Wie is de sterkste?" "Superman" "Batman" "The Flash"*: genereert een interactieve poll.',
+];
 
 const modulemap = {
-    broodjes,
-    irail,
-    status,
-    watis,
-    jira,
-    weer,
+  broodjes,
+  irail,
+  status,
+  watis,
+  jira,
+  weer,
+  poll,
 };
 
 export default function handle(event) {
