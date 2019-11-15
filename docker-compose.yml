@@ -6,13 +6,13 @@ services:
     labels:
       traefik.enable: "true"
     working_dir: /usr/src/app
-    environment:
-      NODE_ENV: development
     tty: true
     ports:
       - "8484:8484"
     links:
       - mongo
+#    volumes:
+#      - './:/usr/src/app'
   mongo:
     image: mongo:4.0
     ports:
