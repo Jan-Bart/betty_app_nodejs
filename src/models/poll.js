@@ -47,14 +47,14 @@ Poll.methods.findOption = async function findOption(id) {
 Poll.methods.formatAsSlackBlocks = async function formatForSlack() {
   await this.populate(['createdBy', 'options.voters']).execPopulate();
   const result = [
-    blockKit.buildSection({ text: `*${this.text}* Poll by <${process.env.SLACK_WORKSPACE_URL}/team/${this.createdBy.slackId}|${this.createdBy.getFullName()}>` }),
+    blockKit.buildSection({ text: `*${this.text}* Poll van <${process.env.SLACK_WORKSPACE_URL}/team/${this.createdBy.slackId}|${this.createdBy.getFullName()}>` }),
     blockKit.buildDivider(),
   ];
 
   this.options.forEach((option) => {
     result.push(blockKit.buildSection({
       text: option.text,
-      accessory: blockKit.accessories.buildButton({ text: 'Vote', value: `poll_vote__poll_${this.id}__option_${option.id}` }),
+      accessory: blockKit.accessories.buildButton({ text: 'Stem', value: `poll_vote__poll_${this.id}__option_${option.id}` }),
     }));
 
     const contextOptions = option.voters.map(voter => blockKit.context.buildImage(
@@ -62,7 +62,7 @@ Poll.methods.formatAsSlackBlocks = async function formatForSlack() {
       // @todo: replace avatar with small sized url _original => _24
     ));
 
-    const votesCaption = `${option.hasVotes() ? option.getNumberOfVotes() : 'No'} ${option.getNumberOfVotes() === 1 ? 'vote' : 'votes'}`;
+    const votesCaption = `${option.hasVotes() ? option.getNumberOfVotes() : 'Geen'} ${option.getNumberOfVotes() === 1 ? 'stem' : 'stemmen'}`;
     contextOptions.push(blockKit.context.buildText({ text: votesCaption }));
 
     result.push(blockKit.buildContext(contextOptions));

@@ -40,6 +40,7 @@ function initializeExpress(callback) {
   app.set('port', process.env.PORT);
   app.use(helmet());
   app.use(bodyParser.json({ limit: '4096kb' }));
+  app.use(bodyParser.urlencoded({ extended: false, type: 'application/x-www-form-urlencoded' }));
 
   app.use((req, res, next) => {
     console.log(`${req.method} ${req.url}`);
