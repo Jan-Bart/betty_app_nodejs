@@ -5,6 +5,7 @@ export default function callBetty(req, res) {
   if (req.body && req.body.challenge) {
     return res.status(200).json(req.body.challenge);
   }
+
   if (!req.body) {
     return res.status(200).json({});
   }
@@ -19,8 +20,8 @@ export default function callBetty(req, res) {
     }
   }
 
-  if (req.body.type === 'block_actions') {
-    Betty.emit('blockActions', req.body);
+  if (req.body.payload && req.body.payload.type === 'block_actions') {
+    Betty.emit('blockActions', req.body.payload);
   }
 
   return res.status(200).json({});

@@ -3,36 +3,29 @@ import * as SlackUserService from '../services/slackUser';
 
 let betty;
 
-function canCreatePollFromEvent(event) {
-  if (!event.user) {
-    console.log('User required to create poll');
-    return false;
-  }
-
-  return true;
-}
-
 async function respondToEvent(event) {
   // betty poll "what is your name?" "john black" "jack smith"
   const [command, text, ...options] = event.text.split('"').map(part => part.trim()).filter(part => part.length);
 
-  if (command !== 'poll') {
-    return null;
+  if (command !== 'poll' || !event.user) {
+    return undefined;
   }
 
-  if (!canCreatePollFromEvent(event)) {
-    return null;
+  const slackUser = await SlackUserService.findOrCreate(event.user);
+
+  if (!options.length) {
+    const referral = slackUser.slackId ? `, <@${slackUser.slackId}>` : '';
+    return betty.sendSlackMessage(`Oeps! Foutje in uw commando${referral}. Probeer \`betty help poll\`.`, event.channel);
   }
 
   const poll = await PollService.create({
-    createdBy: await SlackUserService.findOrCreate(event.user),
+    createdBy: slackUser,
     text,
     options: options.map(option => ({ text: option })),
   });
 
-  const { channel, ts } = await betty.sendSlackMessage('', event.channel, null, await poll.formatAsSlackBlocks());
+  const { ts } = await betty.sendSlackMessage('', event.channel, null, await poll.formatAsSlackBlocks());
   poll.slackTsId = ts;
-  poll.slackChannelId = channel;
   return poll.save();
 }
 
@@ -51,23 +44,23 @@ async function respondToBlockActions(blockActions) {
 
     if (!poll) {
       console.log('cant find poll');
-      return;
+      return undefined;
     }
 
     const option = await poll.findOption(optionId);
 
     if (!option) {
-      return;
+      return undefined;
     }
 
     option.toggleVoter(user);
     await poll.save();
 
     if (!poll.slackTsId || !poll.slackChannelId) {
-      return;
+      return undefined;
     }
 
-    const { ts } = await betty.updateSlackMessage(poll.slackChannelId, poll.slackTsId, await poll.formatForSlack());
+    const { ts } = await betty.updateSlackMessage(poll.slackChannelId, poll.slackTsId, '', await poll.formatAsSlackBlocks());
     poll.slackTsId = ts;
     return poll.save();
   });
