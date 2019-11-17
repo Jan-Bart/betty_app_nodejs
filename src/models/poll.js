@@ -45,7 +45,7 @@ Poll.methods.findOption = async function findOption(id) {
 };
 
 Poll.methods.formatAsSlackBlocks = async function formatForSlack() {
-  await this.populate(['createdBy', 'options.voters']).execPopulate();
+  await (this.populate(['createdBy', 'options.voters']).execPopulate());
   const result = [
     blockKit.buildSection({ text: `*${this.text}* Poll van <${process.env.SLACK_WORKSPACE_URL}/team/${this.createdBy.slackId}|${this.createdBy.getFullName()}>` }),
     blockKit.buildDivider(),
