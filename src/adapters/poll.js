@@ -24,8 +24,9 @@ async function respondToEvent(event) {
     options: options.map(option => ({ text: option })),
   });
 
-  const { ts } = await betty.sendSlackMessage('', event.channel, null, await poll.formatAsSlackBlocks());
+  const { channel, ts } = await betty.sendSlackMessage('', event.channel, null, await poll.formatAsSlackBlocks());
   poll.slackTsId = ts;
+  poll.slackChannelId = channel;
   return poll.save();
 }
 
