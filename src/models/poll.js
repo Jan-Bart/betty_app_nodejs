@@ -5,7 +5,7 @@ import SlackUser from './slackUser';
 const Option = new mongoose.Schema({
   text: String,
   description: String,
-  voters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SlackUser', default: [] }],
+  voters: [{ type: mongoose.Schema.Types.ObjectId, ref: SlackUser, default: [] }],
 });
 
 Option.methods.hasVotes = function getNumberOfVotes() {
@@ -40,12 +40,11 @@ const Poll = new mongoose.Schema({
 }, { timestamps: true });
 
 Poll.methods.findOption = async function findOption(id) {
-  await this.populate(['options']);
   return this.options.find(option => option.id === id);
 };
 
 Poll.methods.formatAsSlackBlocks = async function formatForSlack() {
-  await (this.populate(['createdBy', 'options.voters']).execPopulate());
+  await this.populate(['createdBy', 'options.voters']).execPopulate();
   const result = [
     blockKit.buildSection({ text: `*${this.text}* Poll van <${process.env.SLACK_WORKSPACE_URL}/team/${this.createdBy.slackId}|${this.createdBy.getFullName()}>` }),
     blockKit.buildDivider(),
