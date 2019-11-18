@@ -37,13 +37,19 @@ const Poll = new mongoose.Schema({
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: SlackUser, default: null },
   slackTsId: String,
   slackChannelId: String,
+  deletableByAnyone: { type: Boolean, default: false },
+  deleted: { type: Boolean, default: false },
 }, { timestamps: true });
 
 Poll.methods.findOption = async function findOption(id) {
   return this.options.find(option => option.id === id);
 };
 
-Poll.methods.formatAsSlackBlocks = async function formatForSlack() {
+Poll.methods.canBeDeletedBy = function canBeDeletedBy(slackUser) {
+  return this.deletableByAnyone || this.createdBy._id.toString() === slackUser.id;
+};
+
+Poll.methods.formatAsSlackBlocks = async function formatAsSlackBlocks() {
   await this.populate(['createdBy', 'options.voters']).execPopulate();
   const result = [
     blockKit.buildSection({ text: `*${this.text}* Poll van <${process.env.SLACK_WORKSPACE_URL}/team/${this.createdBy.slackId}|${this.createdBy.getFullName()}>` }),
@@ -67,10 +73,24 @@ Poll.methods.formatAsSlackBlocks = async function formatForSlack() {
     result.push(blockKit.buildContext(contextOptions));
   });
 
-  result.push(blockKit.buildDivider());
+  let confirmText = this.deletableByAnyone ? '' : `Enkel *${this.createdBy.getFullName()}* kan deze poll verwijderen. `;
+  confirmText += 'Deze actie kan *NIET* ongedaan gemaakt worden.';
 
-  // @todo: add a suggestion if poll.allowsExtraOptions
-  // result.blocks.push(blockKit.buildActions());
+  result.push(blockKit.buildDivider());
+  result.push(blockKit.buildSection({
+    text: ' ',
+    accessory: blockKit.accessories.buildButton({
+      style: 'danger',
+      text: 'Verwijder poll',
+      value: `poll_delete__poll_${this.id}`,
+      confirm: blockKit.accessories.button.buildConfirm({
+        title: 'Ben je zeker?',
+        text: confirmText,
+        confirmText: 'Heel zeker, verwijder maar.',
+        denyText: 'Nee, ik heb mij bedacht.',
+      }),
+    }),
+  }));
 
   return result;
 };

@@ -30,6 +30,18 @@ class Betty extends EventEmitter {
     return response;
   }
 
+  async deleteSlackMessage(channelId, tsId) {
+    console.log('deleting slack message: \n', JSON.stringify({ channelId, tsId }));
+
+    if (process.env.SEND_TO_SLACK === 'false') {
+      return { ok: true, channel: channelId, ts: `${new Date().getTime()}.12345` };
+    }
+
+    const response = await this.slack.chat.delete({ channel: channelId, ts: tsId });
+    console.log('Message deleted: ', response.ts);
+    return response;
+  }
+
   async sendSlackMessage(message, channelId, attachments, blocks) {
     console.log('sending slack message: \n', JSON.stringify({ message, channelId, attachments, blocks }));
 

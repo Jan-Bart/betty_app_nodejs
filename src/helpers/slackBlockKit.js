@@ -44,7 +44,32 @@ export default {
           text: options.text,
         },
         value: options.value,
+        confirm: options.confirm,
+        style: options.style,
       };
+    },
+
+    button: {
+      buildConfirm: function buildConfirm(options) {
+        return {
+          title: {
+            type: 'plain_text',
+            text: options.title,
+          },
+          text: {
+            type: 'mrkdwn',
+            text: options.text,
+          },
+          confirm: {
+            type: 'plain_text',
+            text: options.confirmText,
+          },
+          deny: {
+            type: 'plain_text',
+            text: options.denyText,
+          },
+        };
+      },
     },
   },
 
