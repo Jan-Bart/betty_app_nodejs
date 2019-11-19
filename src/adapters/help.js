@@ -42,6 +42,7 @@ const weer = [
 ];
 const poll = [
   '*betty poll "Wie is de sterkste?" "Superman" "Batman" "The Flash"*: genereert een interactieve poll.',
+  '*betty poll --allow-delete "Wie is de sterkste?" "Superman" "Batman" "The Flash"*: genereert een poll die iedereen mag verwijderen.',
 ];
 
 const modulemap = {
