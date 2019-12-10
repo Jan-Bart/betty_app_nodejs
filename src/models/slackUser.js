@@ -6,6 +6,7 @@ const SlackUser = new mongoose.Schema(
     firstName: String,
     lastName: String,
     avatarUrl: String,
+    updatedAt: { type: Date },
   },
   { timestamps: true },
 );
