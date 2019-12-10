@@ -64,7 +64,6 @@ Poll.methods.formatAsSlackBlocks = async function formatAsSlackBlocks() {
 
     const contextOptions = option.voters.map(voter => blockKit.context.buildImage(
       { imageUrl: voter.getAvatarUrl().replace('_original', '_24'), altText: voter.getFullName() },
-      // @todo: replace avatar with small sized url _original => _24
     ));
 
     const votesCaption = `${option.hasVotes() ? option.getNumberOfVotes() : 'Geen'} ${option.getNumberOfVotes() === 1 ? 'stem' : 'stemmen'}`;
