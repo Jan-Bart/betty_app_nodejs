@@ -1,7 +1,6 @@
 import moment from 'moment';
 import _ from 'lodash';
 import weightedRandom from 'weighted-random';
-import schedule from 'node-schedule';
 import Betty from '../betty';
 import Broodje from '../models/broodje';
 import normalizeAndTokenizeText from '../helpers/normalizeAndTokenize';
@@ -269,13 +268,3 @@ export default function handle(event) {
   }
   return true;
 }
-
-schedule.scheduleJob('00 11 * * 1-5', async () => {
-  const lijst = await createBroodjeslijstAttachment();
-  const response = {
-    message: '<!here> Heeft iedereen besteld?',
-    channel: 'C03LXRAGP',
-    attachments: lijst,
-  };
-  Betty.emit('response', response);
-});
